@@ -24,6 +24,32 @@ router.get("/dashboard", ensureAuthenticated, (req, res) =>
   })
 );
 
+//Cancel Reservation
+router.get("/deletereservation/:id", (req, res) => {
+  const id = req.params.id;
+  let errors = [];
+  Reservation.findById(id).then(reservation => {
+    nows = Date.now();
+    diff = nows - reservation.event_date.getTime();
+    diffDays = diff / (1000 * 60 * 60 * 24);
+
+    console.log("digh", diffDays);
+    if (diffDays > 3) {
+      Reservation.findOneAndDelete({ _id: id }, (err, result) => {
+        if (err) {
+          errors.push({ msg: "Something went wrong, Try Again!" });
+          res.redirect("/user/dashboard", { errors });
+        } else {
+          req.flash("success_msg", "Deleted reservation!");
+          console.log("id:", id);
+          res.redirect("/user/dashboard");
+        }
+      });
+    } else {
+      res.redirect("/user/dashboard");
+    }
+  });
+});
 //Delete user handle
 router.get("/deleteuser/:id", (req, res) => {
   const id = req.params.id;
@@ -190,43 +216,99 @@ router.get("/admindashboard", (req, res) => {
   });*/
 });
 // console.log(name)
+router.get(
+  "/payment/:username/:event_name/:seats/:event_date",
+  ensureAuthenticated,
+  (req, res) => {
+    let username = req.params.username;
+    let event_name = req.params.event_name;
+    let seats = req.params.seats;
+
+    let event_date = req.params.event_date;
+
+    res.render("payment", {
+      username: username,
+      event_name: event_name,
+      seats: seats,
+      event_date: event_date
+    });
+  }
+);
+
+router.post(
+  "/payment/:username/:event_name/:seats/:event_date",
+  ensureAuthenticated,
+  (req, res) => {
+    let username = req.params.username;
+    let seats = req.params.seats;
+    let event_name = req.params.event_name;
+    let event_date = req.params.event_date;
+    //console.log("new1", newRes1);
+    //console.log(typeof newRes1);
+    newRes = new Reservation({
+      username,
+      event_name,
+      seats,
+      event_date
+    });
+    //console.log("new", newRes);
+
+    newRes
+      .save()
+      .then(book => {
+        User.findOne({ username: username }).then(user => {
+          if (user.authorization == "admin") {
+            req.flash("success_msg", "Booked!");
+            res.redirect("/user/admindashboard");
+          } else if (user.authorization == "customer") {
+            req.flash("success_msg", "Booked!");
+            res.redirect("/user/dashboard");
+          } else {
+            req.flash("success_msg", "Booked!");
+            res.redirect("/user/managerdashboard");
+          }
+        });
+      })
+      .catch(err => console.log(err));
+  }
+);
 //reserve handle
-router.post("/reserve", (req, res) => {
+router.post("/reserve/:eventName", (req, res) => {
+  eventName = req.params.eventName;
   let seats = [];
   //let {booked, card, pin} = req.body;
   console.log(req.body);
   for (var key in req.body) {
-    console.log(key);
-    seats.push(key);
+    if (key != req.body.card) {
+      console.log(key);
+      seats.push(key);
+    }
   }
   console.log(seats);
 
-  event_name = "lolo";
-  username = req.user.username;
-  const newRes = new Reservation({
-    username,
-    event_name,
-    seats
-  });
-  console.log(newRes);
-
-  newRes
-    .save()
-    .then(book => {
-      console.log("newRes");
-
-      User.findOne({ username: username }).then(user => {
-        if (user.authorization == "admin") {
-          req.flash("success_msg", "Booked!");
-          res.redirect("/user/admindashboard");
-        } else if (user.authorization == "customer") {
-          req.flash("success_msg", "Booked!");
-          res.redirect("/user/dashboard");
-        } else {
-          req.flash("success_msg", "Booked!");
-          res.redirect("/user/managerdashboard");
-        }
+  event_name = eventName;
+  Event.findOne({ event_name: eventName })
+    .then(event => {
+      event_date = event.date_time;
+      username = req.user.username;
+      const newRes = new Reservation({
+        username,
+        event_name,
+        seats,
+        event_date
       });
+      console.log(newRes);
+      req.flash("One Step Left!");
+      return res.redirect(
+        "/user/payment/" +
+          username +
+          "/" +
+          event_name +
+          "/" +
+          seats +
+          "/" +
+          event_date
+      );
     })
     .catch(err => console.log(err));
   let errors = [];
@@ -268,7 +350,7 @@ router.get("/login", (req, res) => res.render("login"));
 router.get("/register", (req, res) => res.render("register"));
 
 //reservations page
-router.get("/reservations", (req, res) => {
+router.get("/reservations", ensureAuthenticated, (req, res) => {
   Reservation.find({ username: req.user.username }).then(books => {
     console.log(books);
     res.render("reservation", { books: books });
@@ -279,24 +361,23 @@ router.get("/reserve/:eventId", ensureAuthenticated, (req, res) => {
   //console.log(req.user);
   eventId = req.params.eventId;
   Event.findById(eventId).then(event => {
-
     eventName = event.event_name;
-    let occupiedSeats=[]
-    Reservation.find({event_name:eventName}).then(reservation=>{
-      
-      for (let i=0;i<reservation.length;i++)
-      {
-        for(let j=0;j<reservation[i].seats.length;j++)
-        {
-          occupiedSeats.push(reservation[i].seats[j])
+    let occupiedSeats = [];
+    Reservation.find({ event_name: eventName }).then(reservation => {
+      for (let i = 0; i < reservation.length; i++) {
+        for (let j = 0; j < reservation[i].seats.length; j++) {
+          occupiedSeats.push(reservation[i].seats[j]);
         }
       }
-      console.log("string",occupiedSeats)
-
+      console.log("string", occupiedSeats);
     });
     //console.log(eventName);
     Hall.findOne({ hall_no: event.hall_num }).then(hall => {
-      res.render("reserve", { hall: hall, eventName: eventName,occupiedSeats:occupiedSeats });
+      res.render("reserve", {
+        hall: hall,
+        eventName: eventName,
+        occupiedSeats: occupiedSeats
+      });
     });
   });
 });

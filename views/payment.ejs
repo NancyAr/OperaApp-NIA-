@@ -1,0 +1,40 @@
+<div class="row mt-5">
+  <div class="col-md-6 m-auto">
+    <div class="card card-body">
+      <h1 class="text-center mb-3">
+        <i class="fa fa-credit-card"></i> Enter Card Details
+      </h1>
+      <% include ./partials/messages %>
+      <form
+        action="/user/payment/<%=username%>/<%=event_name%>/<%=seats%>/<%=event_date%>"
+        method="POST"
+      >
+        <div class="form-group">
+          <label for="card">Enter Card Details</label>
+          <input
+            type="text"
+            id="card"
+            name="card"
+            class="form-control"
+            placeholder="XXXX XXXX XXXX XXXX"
+            value="<%= typeof card != 'undefined' ? card : '' %>"
+          />
+        </div>
+        <div class="form-group">
+          <label for="pin">PIN</label>
+          <input
+            type="number"
+            id="pin"
+            name="pin"
+            class="form-control"
+            placeholder="XXX"
+            value="<%= typeof pin != 'undefined' ? pin : '' %>"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">
+          BOOK
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

@@ -2,7 +2,7 @@
     <link rel="stylesheet" href="/opera.css" />
 
     </div>
-    <form action="/user/reserve" method="POST">
+    <form action="/user/reserve/<%=eventName%>" method="POST">
     <div class="plane">
       <div class="cockpit">
         <h1><%=eventName%></h1>
@@ -37,28 +37,6 @@
       </ol>
       <br/>
       <hr class="my-4">
-      <div class="form-group">
-        <label for="card">Enter Card Details</label>
-        <input
-          type="string"
-          id="card"
-          name="card"
-          class="form-control"
-          placeholder="XXXX XXXX XXXX XXXX"
-          value="<%= typeof card != 'undefined' ? card : '' %>"
-        />
-      </div>
-      <div class="form-group">
-        <label for="pin">PIN</label>
-        <input
-          type="number"
-          id="pin"
-          name="pin"
-          class="form-control"
-          placeholder="XXX"
-          value="<%= typeof pin != 'undefined' ? pin : '' %>"
-        />
-      </div>
         <button type="submit" class="btn btn-primary btn-block">
           Reserve
         </button>
