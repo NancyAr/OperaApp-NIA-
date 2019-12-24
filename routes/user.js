@@ -193,6 +193,8 @@ router.get("/admindashboard", (req, res) => {
 //reserve handle
 router.post("/reserve", (req, res) => {
   let seats = [];
+  //let {booked, card, pin} = req.body;
+  console.log(req.body);
   for (var key in req.body) {
     console.log(key);
     seats.push(key);
@@ -276,11 +278,13 @@ router.get("/reservations", (req, res) => {
 router.get("/reserve/:eventId", ensureAuthenticated, (req, res) => {
   //console.log(req.user);
   eventId = req.params.eventId;
-  Event.findById(eventId).then(event =>
+  Event.findById(eventId).then(event => {
+    eventName = event.event_name;
+    //console.log(eventName);
     Hall.findOne({ hall_no: event.hall_num }).then(hall => {
-      res.render("reserve", { hall: hall });
-    })
-  );
+      res.render("reserve", { hall: hall, eventName: eventName });
+    });
+  });
 });
 
 //edit profile page

@@ -8,9 +8,6 @@
 body {
   background-color: black;
 }
-html {
-  font-size: 16px;
-}
 
 #reserve {
   float: left;
@@ -61,6 +58,7 @@ html {
 .cockpit h1 {
   width: 60%;
   margin: 100px auto 35px auto;
+  color: white;
 }
 
 .exit {
