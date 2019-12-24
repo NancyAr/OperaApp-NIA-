@@ -201,7 +201,7 @@ router.post("/reserve", (req, res) => {
   }
   console.log(seats);
 
-  event_name = "lol";
+  event_name = "lolo";
   username = req.user.username;
   const newRes = new Reservation({
     username,
@@ -279,10 +279,24 @@ router.get("/reserve/:eventId", ensureAuthenticated, (req, res) => {
   //console.log(req.user);
   eventId = req.params.eventId;
   Event.findById(eventId).then(event => {
+
     eventName = event.event_name;
+    let occupiedSeats=[]
+    Reservation.find({event_name:eventName}).then(reservation=>{
+      
+      for (let i=0;i<reservation.length;i++)
+      {
+        for(let j=0;j<reservation[i].seats.length;j++)
+        {
+          occupiedSeats.push(reservation[i].seats[j])
+        }
+      }
+      console.log("string",occupiedSeats)
+
+    });
     //console.log(eventName);
     Hall.findOne({ hall_no: event.hall_num }).then(hall => {
-      res.render("reserve", { hall: hall, eventName: eventName });
+      res.render("reserve", { hall: hall, eventName: eventName,occupiedSeats:occupiedSeats });
     });
   });
 });

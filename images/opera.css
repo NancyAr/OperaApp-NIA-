@@ -125,6 +125,7 @@ ol {
   left: 50%;
   transform: translate(-50%, 0%);
 }
+
 .seat input[type="checkbox"]:disabled + label:hover {
   box-shadow: none;
   cursor: not-allowed;

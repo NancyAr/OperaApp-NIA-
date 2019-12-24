@@ -12,7 +12,13 @@ const ReservationSchema = new mongoose.Schema({
   seats: {
     type: Array,
     required: true
+  },
+  event_date:
+  {
+    type: Date,
+    required:true
   }
+
 });
 
 const Reservation = mongoose.model("Reservation", ReservationSchema);

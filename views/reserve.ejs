@@ -16,12 +16,20 @@
           <ol class="seats" type="A">
             <% for(let j=0; j < hall.num_seats_per_row; j++){ %> <%
             seat=String.fromCharCode(i+65)+j%>
-
+              <% if( occupiedSeats.includes(seat)) {%>
+                <li class="seat">
+                  <input type="checkbox" disabled id="<%=seat%>" name="<%=seat%>" />
+                  <label  for="<%=seat%>" value=""><%=seat%> </label>
+                </li>    
+              
+              <%} else {%>
             <li class="seat">
               <input type="checkbox" id="<%=seat%>" name="<%=seat%>" />
-              <label for="<%=seat%>" value=""><%=seat%> </label>
+              <label  for="<%=seat%>" value=""><%=seat%> </label>
             </li>
+            
 
+            <% } %>
             <% } %>
           </ol>
         </li>
