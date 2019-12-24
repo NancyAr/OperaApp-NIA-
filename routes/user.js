@@ -192,8 +192,41 @@ router.get("/admindashboard", (req, res) => {
 // console.log(name)
 //reserve handle
 router.post("/reserve", (req, res) => {
-  let {seats} = req.body;
+  let seats = [];
+  for (var key in req.body) {
+    console.log(key);
+    seats.push(key);
+  }
   console.log(seats);
+
+  event_name = "lol";
+  username = req.user.username;
+  const newRes = new Reservation({
+    username,
+    event_name,
+    seats
+  });
+  console.log(newRes);
+
+  newRes
+    .save()
+    .then(book => {
+      console.log("newRes");
+
+      User.findOne({ username: username }).then(user => {
+        if (user.authorization == "admin") {
+          req.flash("success_msg", "Booked!");
+          res.redirect("/user/admindashboard");
+        } else if (user.authorization == "customer") {
+          req.flash("success_msg", "Booked!");
+          res.redirect("/user/dashboard");
+        } else {
+          req.flash("success_msg", "Booked!");
+          res.redirect("/user/managerdashboard");
+        }
+      });
+    })
+    .catch(err => console.log(err));
   let errors = [];
   time = Date.now();
   /*Reservation.findOne(req.body.id).then(book => {
@@ -233,8 +266,12 @@ router.get("/login", (req, res) => res.render("login"));
 router.get("/register", (req, res) => res.render("register"));
 
 //reservations page
-router.get("/reservations", (req, res) => res.render("reservation"));
-
+router.get("/reservations", (req, res) => {
+  Reservation.findOne({ username: req.user.username }).then(books => {
+    // console.log(books);
+    res.render("reservation", { books: books });
+  });
+});
 //reserve
 router.get("/reserve/:eventId", ensureAuthenticated, (req, res) => {
   //console.log(req.user);
@@ -445,7 +482,6 @@ router.post("/register", (req, res) => {
 router.post("/login", (req, res, next) => {
   let errors = [];
   User.findOne({ email: req.body.email }).then(users => {
-    console.log("here1" + users);
     if (!users) {
       passport.authenticate("user-local", {
         successRedirect: "/user/dashboard",
@@ -454,16 +490,12 @@ router.post("/login", (req, res, next) => {
       })(req, res, next);
     }
     if (users.authorization == "customer") {
-      console.log("here2");
-
       passport.authenticate("user-local", {
         successRedirect: "/user/dashboard",
         failureRedirect: "/user/login",
         failureFlash: true
       })(req, res, next);
     } else if (users.authorization == "admin") {
-      console.log("here3");
-
       passport.authenticate("user-local", {
         successRedirect: "/user/admindashboard",
         failureRedirect: "/user/login",

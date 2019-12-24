@@ -50,9 +50,13 @@
       <h5><strong>Gender: </strong> <%= user.gender %></h5>
       <h5><strong>Location: </strong> <%= user.city %>, <%= user.address %></h5>
       <hr class="my-4" />
-      <form class="form-inline my-2 my-lg-0" action="/user/editprofile" method="get">
+      <form
+        class="form-inline my-2 my-lg-0"
+        action="/user/editprofile"
+        method="get"
+      >
         <button class="btn btn-info my-2 my-sm-0" href="/user/editprofile">
-          <%= console.log("kk");%> Edit Profile
+          Edit Profile
         </button>
       </form>
     </div>

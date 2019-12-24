@@ -9,9 +9,9 @@ const ReservationSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  date_time: {
-    type: Date,
-    required: false
+  seats: {
+    type: Array,
+    required: true
   }
 });
 
