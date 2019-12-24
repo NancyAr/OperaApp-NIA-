@@ -59,12 +59,12 @@
               <%= books[i].event_name %>
             </th>
             <td><%= books[i].seats %></td>
-            <td></td>
+            <td><%= books[i].event_date.toDateString() %></td>
             <td></td>
 
             <td>
               <a
-                href="/user/deleteevent/<%=books[i]._id%>"
+                href="/user/deletereservation/<%=books[i]._id%>"
                 class="btn btn-danger"
                 >X</a
               >

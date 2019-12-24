@@ -39,6 +39,34 @@ router.get("/deleteuser/:id", (req, res) => {
   });
 });
 
+router.get("/deletereservation/:id", (req, res) => {
+  const id = req.params.id;
+  let errors = [];
+  Reservation.findById(id).then(reservation=>{
+    nows=Date.now()
+    diff=nows-reservation.event_date.getTime();
+    diffDays=diff/(1000*60*60*24);
+     
+    console.log("digh",diffDays)
+    if (diffDays>3){
+      Reservation.findOneAndDelete({ _id: id }, (err, result) => {
+        if (err) {
+          errors.push({ msg: "Something went wrong, Try Again!" });
+          res.redirect("/user/dashboard", { errors });
+        } else {
+          req.flash("success_msg", "Deleted reservation!");
+          console.log("id:",id)
+          res.redirect("/user/dashboard");
+        }
+      });
+    }
+    else{
+      res.redirect("/user/dashboard");
+    }
+
+  });
+});
+
 //Edit User Authority
 /*
 router.post("/edituser/:id", (req, res) => {
