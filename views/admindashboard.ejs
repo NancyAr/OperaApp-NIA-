@@ -1,0 +1,101 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <a class="navbar-brand" href="#">Dashboard</a>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarColor01"
+    aria-controls="navbarColor01"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarColor01">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#"
+          >Home <span class="sr-only">(current)</span></a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/user/showevents">Events</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/user/reservations">Reservations</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/user/logout" style="margin-left: 300px;"
+          >Logout</a
+        >
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="text" placeholder="Search" />
+      <button class="btn btn-secondary my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </form>
+  </div>
+</nav>
+
+<div id="myTabContent" class="tab-content">
+  <div class="tab-pane fade show active" id="home">
+    <div class="jumbotron">
+      <table class="table table-hover">
+        <thead>
+          <tr class="table-primary">
+            <th scope="col">Username</th>
+            <th scope="col">Full Name</th>
+            <th scope="col">Email</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <% include ./partials/messages %>
+
+        <tbody>
+          <% for(var i=0; i < users.length; i++){ %>
+
+          <tr>
+            <th scope="row" id="<%= users[i].username %>">
+              <%= users[i].username %>
+            </th>
+            <td><%= users[i].fname %> <%= users[i].lname %></td>
+            <td><%= users[i].email %></td>
+            <td>
+              <a
+                href="/user/deleteuser/<%=users[i]._id%>"
+                class="btn btn-danger btn-block"
+                >Delete</a
+              >
+            </td>
+
+            <td>
+            <form action="/user/edituser/<%=users[i]._id%>" method="POST">
+              <select class="form-control" name="authority" id="authority">
+                <option name="authority" value="admin" <% if(users[i].authorization == "admin"){ %>
+                    selected 
+                    <% }%> >Admin</option>
+                <option name="authority" value="management"  <% if(users[i].authorization == "management"){ %>
+                    selected 
+                    <% }%> >Management</option>
+                <option name="authority" value="customer"  <% if(users[i].authorization == "customer"){ %>
+                    selected 
+                    <% }%>>Customer</option>
+              </select></br>
+              <button class="btn btn-success"
+              ><a
+                >Change Authority</a
+              ></form>
+            </form>
+            </td>
+          </tr>
+        <% }%>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

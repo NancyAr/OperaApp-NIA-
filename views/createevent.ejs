@@ -1,0 +1,116 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarColor01"
+    aria-controls="navbarColor01"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarColor01">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item ">
+        <a class="nav-link" href="/user/managerdashboard">Home </a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="#"
+          >Create Event <span class="sr-only">(current)</span></a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/user/createhall">Create Hall</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/user/logout" style="margin-left: 300px;"
+          >Logout</a
+        >
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="text" placeholder="Search" />
+      <button class="btn btn-secondary my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </form>
+  </div>
+</nav>
+<div class="row mt-5">
+  <div class="col-md-6 m-auto">
+    <div class="card card-body">
+      <h1 class="text-center mb-3">
+        <i class="fas fa-event-plus"></i> Create Event
+      </h1>
+      <% include ./partials/messages %>
+      <form action="/user/createevent" method="POST">
+        <div class="form-group">
+          <label for="event_name">Event Name</label>
+          <input
+            type="name"
+            id="event_name"
+            name="event_name"
+            class="form-control"
+            placeholder="Event Name"
+            value="<%= typeof event_name != 'undefined' ? event_name : '' %>"
+          />
+        </div>
+        <div class="form-group">
+          <label for="description">Desciption</label>
+          <textarea
+            type="textarea"
+            id="description"
+            name="description"
+            class="form-control"
+            placeholder="Write Desciption Here..."
+            value="<%= typeof description != 'undefined' ? description  : '' %>"
+          ></textarea>
+        </div>
+        <div class="form-group">
+          <div class="file-field">
+            <label for="event_poster">Event Poster</label>
+            <div class="btn btn-secondary btn-sm">
+              <input
+                type="file"
+                id="event_poster"
+                name="event_poster"
+                class="form-control"
+                placeholder=""
+                value="<%= typeof event_poster != 'undefined' ? event_poster : '' %>"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="date_time">Set Date and Time</label>
+          <input
+            type="datetime-local"
+            id="date_time"
+            name="date_time"
+            class="form-control"
+            placeholder=""
+            value="<%= typeof date_time != 'undefined' ? date_time : '' %>"
+          />
+        </div>
+        <div class="form-group">
+          <label for="hall_num">Set Hall Number</label>
+          <input
+            type="number"
+            id="hall_num"
+            name="hall_num"
+            class="form-control"
+            placeholder=""
+            value="<%= typeof hall_num != 'undefined' ? hall_num : '' %>"
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">
+          Create
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

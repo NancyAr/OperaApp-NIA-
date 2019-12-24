@@ -1,0 +1,108 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <a class="navbar-brand" href="#">EVENTS</a>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarColor01"
+    aria-controls="navbarColor01"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarColor01">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/user/admindashboard">Home </a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="#"
+          >Events<span class="sr-only">(current)</span></a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/user/reservations">Pricing</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/user/logout" style="margin-left: 400px;"
+          >Logout</a
+        >
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="text" placeholder="Search" />
+      <button class="btn btn-secondary my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </form>
+  </div>
+</nav>
+<hr class="my-4" />
+<% for(var i=0; i < events.length; i++){ %> <%
+console.log((events[i].event_poster).toString('ascii')) %> <% img =
+(events[i].event_poster).toString('ascii') %>
+
+<!-- Card -->
+<div
+  class="card"
+  style="max-width: 20rem; float: left; text-align: center;width:30%;
+padding:10px; margin: 10px 10px 10px 10px;"
+>
+  <!-- Card image -->
+  <div class="view overlay">
+    <img
+      class="card-img-top"
+      style="width:300px; height:200px;
+    "
+      src="/<%= img%>"
+      alt="Card image cap"
+    />
+    <a>
+      <div class="mask rgba-white-slight"></div>
+    </a>
+  </div>
+
+  <!-- Button -->
+  <a
+    class="btn-floating btn-action ml-auto mr-4 mdb-color lighten-3"
+    href="/user/reserve/<%= events[i]._id%>"
+    ><i class="fas fa-chevron-right pl-1"></i>
+  </a>
+
+  <!-- Card content -->
+  <div class="card-body">
+    <!-- Title -->
+    <h4 class="card-title"><%= events[i].event_name %></h4>
+    <hr />
+    <!-- Text -->
+    <p class="card-text">
+      <%= events[i].description %>
+    </p>
+  </div>
+
+  <!-- Card footer -->
+  <div class="rounded-bottom mdb-color lighten-3 text-center pt-3">
+    <ul class="list-unstyled list-inline font-small">
+      <li class="list-inline-item pr-2 white-text">
+        <i class="far fa-clock pr-1"></i><%= events[i].date_time %>
+      </li>
+      <li class="list-inline-item pr-2">
+        <a href="#" class="white-text"
+          ><i class="far fa-comments pr-1"></i><%= events[i].hall_num %></a
+        >
+      </li>
+      <li class="list-inline-item pr-2">
+        <a href="#" class="white-text"
+          ><i class="fab fa-facebook-f pr-1"> </i>21</a
+        >
+      </li>
+      <li class="list-inline-item">
+        <a href="#" class="white-text"><i class="fab fa-twitter pr-1"> </i>5</a>
+      </li>
+    </ul>
+  </div>
+</div>
+<!-- Card -->
+<% }%>

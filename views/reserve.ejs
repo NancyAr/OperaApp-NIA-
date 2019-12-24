@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>View Seats</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link rel="stylesheet" href="css/normalize.min.css" />
+    <link rel="stylesheet" href="css/home.css" />
+    <link rel="stylesheet" href="/opera.css" />
+  </head>
+  <body>
+    <div class="header">
+      <a href="#default" class="logo">Opera</a>
+      <div class="header-right">
+        <a class="active" href="#home">Home</a>
+        <a href="/events">Events</a>
+        <a href="/edit">Edit Profile</a>
+        <a href="/signup">Register</a>
+        <a href="/signup#login">Login</a>
+      </div>
+    </div>
+    <form action="/user/reserve" method="POST">
+    <div class="plane">
+      <div class="cockpit">
+        <h1>Please select a seat</h1>
+      </div>
+      <ol class="cabin fuselage">
+        <% let seat= "" %> 
+        <% let lol= "" %> 
+        
+        <% for(let i=0; i < hall.num_rows; i++){ %>
+        <li class=" row--2">
+          <ol class="seats" type="A">
+            <% for(let j=0; j < hall.num_seats_per_row; j++){ %> <%
+            seat=String.fromCharCode(i+65)+j%>
+
+            <li class="seat">
+              <input type="checkbox" id="<%=seat%>" name="<%=seat%>" />
+              <label for="<%=seat%>" value=""><%=seat%> </label>
+            </li>
+
+            <% } %>
+          </ol>
+        </li>
+        <%}%>
+      </ol>
+
+        <button type="submit" class="btn btn-primary btn-block">
+          Reserve
+        </button>
+      </form>
+    </div>
+  </body>
+</html>
