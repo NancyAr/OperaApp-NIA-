@@ -52,18 +52,20 @@
         </thead>
         <% include ./partials/messages %>
         <tbody>
-          <% for(let i=0; i< books.length; ++i){ %> <% console.log(books[i]); %>
+          <% for(let i=0; i< books.length; ++i){ %>
 
           <tr>
-            <th scope="row" id="<%= book.event_name %>">
-              <%= book.event_name %>
+            <th scope="row" id="<%= books[i].event_name %>">
+              <%= books[i].event_name %>
             </th>
-            <td><%= book.seats %></td>
+            <td><%= books[i].seats %></td>
             <td></td>
             <td></td>
 
             <td>
-              <a href="/user/deleteevent/<%=book._id%>" class="btn btn-danger"
+              <a
+                href="/user/deleteevent/<%=books[i]._id%>"
+                class="btn btn-danger"
                 >X</a
               >
             </td>

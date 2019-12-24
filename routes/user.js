@@ -267,8 +267,8 @@ router.get("/register", (req, res) => res.render("register"));
 
 //reservations page
 router.get("/reservations", (req, res) => {
-  Reservation.findOne({ username: req.user.username }).then(books => {
-    // console.log(books);
+  Reservation.find({ username: req.user.username }).then(books => {
+    console.log(books);
     res.render("reservation", { books: books });
   });
 });
