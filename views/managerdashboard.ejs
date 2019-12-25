@@ -26,6 +26,9 @@
         <a class="nav-link" href="/user/createhall">create hall</a>
       </li>
       <li class="nav-item">
+        <a class="nav-link" href="/user/showevents">Show Events</a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href="/user/logout" style="margin-left: 300px;"
           >Logout</a
         >
@@ -66,17 +69,11 @@
             <td>
               <a
                 href="/user/deleteevent/<%=events[i]._id%>"
-                class="btn btn-danger"
+                class="btn btn-danger btn-block"
                 >X</a
               >
             </td>
-            <td>
-              <a
-                href="/user/showhall/<%=events[i]._id%>"
-                class="btn btn-info btn-block"
-                >Hall</a
-              >
-            </td>
+            <td></td>
           </tr>
           <% }%>
         </tbody>

@@ -94,11 +94,11 @@ ol {
 
 .seat {
   display: flex;
-  flex: 0 0 14.28571428571429%;
+  flex: 0 14.28571428571429%;
   padding: 5px;
   position: relative;
 }
-.seat:nth-child(odd) {
+.seat:nth-child(3) {
   margin-right: 14.28571428571429%;
 }
 .seat input[type="checkbox"] {
