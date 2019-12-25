@@ -7,6 +7,7 @@ const passport = require("passport");
 const sass = require("node-sass");
 const app = express();
 
+require("express-ws")(app);
 //Passport config
 require("./config/passport")(passport);
 
@@ -52,7 +53,25 @@ app.use((req, res, next) => {
   res.locals.error = req.flash("error");
   next();
 });
-
+app.use(function(req, res, next) {
+  const origin = req.headers["origin"];
+  res.header("Access-Control-Allow-Origin", origin);
+  res.header("Access-Control-Allow-Methods", "GET,POST,PATCH,DELETE,OPTIONS");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization, Set-Cookie"
+  );
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
+/*
+app.ws("/showhall", function(ws, req) {
+  console.log("LOL");
+  ws.on("message", function(msg) {
+    console.log(msg);
+  });
+  console.log("socket", req.testing);
+});*/
 //Routes
 app.use("/", require("./routes/index"));
 app.use("/user", require("./routes/user"));

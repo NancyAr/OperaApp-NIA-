@@ -2,12 +2,7 @@
     <link rel="stylesheet" href="/opera.css" />
 
     </div>
-    <a
-    style="padding:10px 10px 10px 10px;"
-    class="btn-primary"
-    href="/user/showevents"
-    ><i class="fas fa-arrow-left btn" >BACK</i>
-  </a>
+    
     <form action="/user/reserve/<%=eventName%>" method="POST">
     <div class="plane">
       <div class="cockpit">
@@ -21,7 +16,9 @@
         <li class=" row--2">
           <ol class="seats" type="A">
             <% for(let j=0; j < hall.num_seats_per_row; j++){ %> <%
-            seat=String.fromCharCode(i+65)+j%>
+            seat=String.fromCharCode(i+65)+j
+            console.log("Occupied Seats=",occupiedSeats)
+            %>
               <% if( occupiedSeats.includes(seat)) {%>
                 <li class="seat">
                   <input type="checkbox" disabled id="<%=seat%>" name="<%=seat%>" />
@@ -52,4 +49,31 @@
         <%}%>
 
       </form>
+
+      <script>
+        const ws = new WebSocket("ws://localhost:5000/user/watcher");
+
+        ws.addEventListener("open", () => {
+          console.log("open");
+          //let id = 1;
+          setTimeout(()=>{
+          ws.send(JSON.stringify({id: "<%=eventId%>"}));
+        }, 1000)
+          
+          //ws.send(JSON.stringify({id: "<%=eventId%>"}));
+
+        })
+        
+        ws.addEventListener("message", (ev) => {
+          const msg = JSON.parse(ev.data);
+          console.log(msg)
+          console.log("asas",msg.occupiedSeats)
+          ocSeats=msg.occupiedSeats;
+          old= "<%=occupiedSeats%>";
+          if ("<%=occupiedSeats.length%>" != ocSeats.length)
+          {
+            window.location.href= "/user/reserve/<%=eventId%>"
+          }
+        })
+      </script>
     </div>

@@ -15,7 +15,16 @@
   <div class="collapse navbar-collapse" id="navbarColor01">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
+        <% if(authorization == "customer") { %>
+        <a class="nav-link" href="/user/dashboard">Home </a>
+
+        <%}%> <% if(authorization == "admin") { %>
         <a class="nav-link" href="/user/admindashboard">Home </a>
+
+        <%}%> <% if(authorization == "manager") { %>
+        <a class="nav-link" href="/user/managerdashboard">Home </a>
+
+        <%}%>
       </li>
       <li class="nav-item active">
         <a class="nav-link" href="#"
@@ -23,10 +32,7 @@
         >
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/user/reservations">Reservations</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/user/logout" style="margin-left: 400px;"
+        <a class="nav-link" href="/user/logout" style="margin-left: 700px;"
           >Logout</a
         >
       </li>
