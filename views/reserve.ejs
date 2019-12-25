@@ -2,6 +2,12 @@
     <link rel="stylesheet" href="/opera.css" />
 
     </div>
+    <a
+    style="padding:10px 10px 10px 10px;"
+    class="btn-primary"
+    href="/user/showevents"
+    ><i class="fas fa-arrow-left btn" >BACK</i>
+  </a>
     <form action="/user/reserve/<%=eventName%>" method="POST">
     <div class="plane">
       <div class="cockpit">
@@ -39,7 +45,7 @@
       </ol>
       <br/>
       <hr class="my-4">
-      <% if (user.authorization!="manager"){%>
+      <% if (user.authorization=="customer"){%>
         <button type="submit" class="btn btn-primary btn-block">
           Reserve
         </button>

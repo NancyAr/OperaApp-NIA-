@@ -17,16 +17,24 @@ const Reservation = require("../models/Reservation");
 //Admin Model
 const Hall = require("../models/Hall");
 
+//Home page
+router.get("/", (req, res) => res.render("welcome"));
+
+//login page
+router.get("/login", (req, res) => res.render("login"));
+
+//resister page
+router.get("/register", (req, res) => res.render("register"));
+
 //dashboard page
 router.get("/dashboard", ensureAuthenticated, (req, res) =>
   res.render("dashboard", {
     user: req.user
   })
 );
-//show hall page
 
 //Cancel Reservation
-router.get("/deletereservation/:id", (req, res) => {
+router.get("/deletereservation/:id", ensureAuthenticated, (req, res) => {
   const id = req.params.id;
   let errors = [];
   Reservation.findById(id).then(reservation => {
@@ -55,8 +63,9 @@ router.get("/deletereservation/:id", (req, res) => {
     }
   });
 });
+
 //Delete user handle
-router.get("/deleteuser/:id", (req, res) => {
+router.get("/deleteuser/:id", ensureAuthenticated, (req, res) => {
   const id = req.params.id;
   let errors = [];
   User.findOneAndDelete({ _id: id }, (err, result) => {
@@ -70,93 +79,8 @@ router.get("/deleteuser/:id", (req, res) => {
   });
 });
 
-//Edit User Authority
-/*
-router.post("/edituser/:id", (req, res) => {
-  //If chosen user is customer
-  //console.log("param "+req.params.id+" body "+req.body.authority);
-  let errors = [];
-  User.findByIdAndDelete(req.params.id).then(user => {
-    if (user) {
-      username = user.username;
-      fname = user.fname;
-      lname = user.lname;
-      email = user.email;
-      password = user.password;
-      birthday = user.birthday;
-      gender = user.gender;
-      city = user.city;
-      address = user.city;
-
-      if (req.body.authority == "admin") {
-        const newAdmin = new Admin({
-          username,
-          fname,
-          lname,
-          email,
-          password,
-          birthday,
-          gender,
-          city,
-          address
-        });
-        //user.authorization = req.body.authority;
-        //save the user
-
-        newAdmin
-          .save()
-          .then(newadmin => {
-            req.flash("success_msg", "Changed Authority!");
-            res.redirect("/user/admindashboard");
-          })
-          .catch(err => console.log(err));
-      }
-    }
-  });
-
-  //If chosen user is admin
-  Admin.findByIdAndDelete(req.params.id).then(admin => {
-    if (admin) {
-      username = admin.username;
-      fname = admin.fname;
-      lname = admin.lname;
-      email = admin.email;
-      password = admin.password;
-      birthday = admin.birthday;
-      gender = admin.gender;
-      city = admin.city;
-      address = admin.city;
-
-      if (req.body.authority == "customer") {
-        const newUser = new User({
-          username,
-          fname,
-          lname,
-          email,
-          password,
-          birthday,
-          gender,
-          city,
-          address
-        });
-        //user.authorization = req.body.authority;
-        //save the user
-
-        newUser
-          .save()
-          .then(newuser => {
-            req.flash("success_msg", "Changed Authority!");
-            res.redirect("/user/admindashboard");
-          })
-          .catch(err => console.log(err));
-      }
-    }
-  });
-});*/
-
 //edit user authority
-router.post("/edituser/:id", (req, res) => {
-  //console.log("param "+req.params.id+" body "+req.body.authority);
+router.post("/edituser/:id", ensureAuthenticated, (req, res) => {
   let errors = [];
   User.findById(req.params.id).then(user => {
     user.authorization = req.body.authority;
@@ -172,7 +96,7 @@ router.post("/edituser/:id", (req, res) => {
 });
 
 //user showevents page
-router.get("/showevents", (req, res) =>
+router.get("/showevents", ensureAuthenticated, (req, res) =>
   Event.find()
     .then(events => {
       res.render("showevents", { events: events });
@@ -191,36 +115,18 @@ router.get("/managerdashboard", (req, res) => {
 
 //admin dashboard page
 router.get("/admindashboard", (req, res) => {
+  let sentuser = [];
   User.find()
     .then(users => {
-      res.render("admindashboard", { users: users });
+      for (let i = 0; i < users.length; i++) {
+        if (users[i].username != req.user.username) sentuser.push(users[i]);
+      }
+      res.render("admindashboard", { users: sentuser });
     })
     .catch(err => console.log(err));
-
-  //console.log(req.params.username);
-  /*let users = [];
-  Admin.find().then(admin => {
-    if (admin) {
-      for (let i = 0; i < admin.length; i++) {
-        //if (admin[i].username != req.user.username) {
-        users.push(admin[i]);
-        //}
-      }
-      User.find()
-        .then(user => {
-          for (let i = 0; i < user.length; i++) {
-            //if (user[i].username != req.user.username) {
-            users.push(user[i]);
-            //}
-          }
-          console.log(users);
-          res.render("admindashboard", { users: users });
-        })
-        .catch(err => console.log(err));
-    }
-  });*/
 });
-// console.log(name)
+
+//Payment route
 router.get(
   "/payment/:username/:event_name/:seats/:event_date",
   ensureAuthenticated,
@@ -278,7 +184,7 @@ router.post(
   }
 );
 //reserve handle
-router.post("/reserve/:eventName", (req, res) => {
+router.post("/reserve/:eventName", ensureAuthenticated, (req, res) => {
   eventName = req.params.eventName;
   let seats = [];
   //let {booked, card, pin} = req.body;
@@ -318,41 +224,7 @@ router.post("/reserve/:eventName", (req, res) => {
     .catch(err => console.log(err));
   let errors = [];
   time = Date.now();
-  /*Reservation.findOne(req.body.id).then(book => {
-    if (book) {
-      errors.push({ msg: "Already made!" });
-    }
-  });
-  if (errors.length > 0) {
-    res.render("reserve", {
-      errors,
-      username,
-      event_name
-    });
-  } else {
-    const newRes = new Reservation({
-      username,
-      event_name,
-      time
-    });
-    newRes
-      .save()
-      .then(user => {
-        req.flash("success_msg", "Edited!");
-        res.redirect("/user/dashboard");
-      })
-      .catch(err => console.log(err));
-  }*/
 });
-
-//Home page
-router.get("/", (req, res) => res.render("welcome"));
-
-//login page
-router.get("/login", (req, res) => res.render("login"));
-
-//resister page
-router.get("/register", (req, res) => res.render("register"));
 
 //reservations page
 router.get("/reservations", ensureAuthenticated, (req, res) => {
@@ -469,10 +341,14 @@ router.post("/editprofile", ensureAuthenticated, (req, res) => {
 });
 
 //create events page
-router.get("/createevent", (req, res) => res.render("createevent"));
+router.get("/createevent", ensureAuthenticated, (req, res) =>
+  res.render("createevent")
+);
 
 //create halls page
-router.get("/createhall", (req, res) => res.render("createhall"));
+router.get("/createhall", ensureAuthenticated, (req, res) =>
+  res.render("createhall")
+);
 
 //register handle
 router.post("/register", (req, res) => {
@@ -624,7 +500,7 @@ router.get("/logout", (req, res) => {
 });
 
 // create event handle
-router.post("/createevent", (req, res) => {
+router.post("/createevent", ensureAuthenticated, (req, res) => {
   const {
     event_name,
     description,
@@ -687,7 +563,7 @@ router.post("/createevent", (req, res) => {
 });
 
 // create hall handle
-router.post("/createhall", (req, res) => {
+router.post("/createhall", ensureAuthenticated, (req, res) => {
   const { num_rows, num_seats_per_row, hall_no } = req.body;
   let errors = [];
   console.log(req.body);
@@ -735,7 +611,7 @@ router.post("/createhall", (req, res) => {
 });
 
 //Delete event handle
-router.get("/deleteevent/:id", (req, res) => {
+router.get("/deleteevent/:id", ensureAuthenticated, (req, res) => {
   const id = req.params.id;
   let errors = [];
   Event.findOneAndDelete({ _id: id }, (err, result) => {
