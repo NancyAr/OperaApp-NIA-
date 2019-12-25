@@ -23,6 +23,7 @@ router.get("/dashboard", ensureAuthenticated, (req, res) =>
     user: req.user
   })
 );
+//show hall page
 
 //Cancel Reservation
 router.get("/deletereservation/:id", (req, res) => {
@@ -33,7 +34,7 @@ router.get("/deletereservation/:id", (req, res) => {
     diff = nows - reservation.event_date.getTime();
     diffDays = diff / (1000 * 60 * 60 * 24);
 
-    console.log("digh", diffDays);
+    //console.log("digh", diffDays);
     if (diffDays > 3) {
       Reservation.findOneAndDelete({ _id: id }, (err, result) => {
         if (err) {
@@ -46,6 +47,10 @@ router.get("/deletereservation/:id", (req, res) => {
         }
       });
     } else {
+      req.flash(
+        "error_msg",
+        "you can't cancel an event that happens in less than 3 days"
+      );
       res.redirect("/user/dashboard");
     }
   });
@@ -376,7 +381,8 @@ router.get("/reserve/:eventId", ensureAuthenticated, (req, res) => {
       res.render("reserve", {
         hall: hall,
         eventName: eventName,
-        occupiedSeats: occupiedSeats
+        occupiedSeats: occupiedSeats,
+        user: req.user
       });
     });
   });

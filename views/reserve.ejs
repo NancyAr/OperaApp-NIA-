@@ -24,7 +24,9 @@
               
               <%} else {%>
             <li class="seat">
+              <% if (user.authorization!="manager"){%>
               <input type="checkbox" id="<%=seat%>" name="<%=seat%>" />
+              <% } %>
               <label  for="<%=seat%>" value=""><%=seat%> </label>
             </li>
             
@@ -37,8 +39,10 @@
       </ol>
       <br/>
       <hr class="my-4">
+      <% if (user.authorization!="manager"){%>
         <button type="submit" class="btn btn-primary btn-block">
           Reserve
         </button>
+        <%}%>
       </form>
     </div>

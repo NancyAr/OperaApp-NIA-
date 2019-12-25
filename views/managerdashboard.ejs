@@ -48,10 +48,7 @@
           <tr class="table-primary">
             <th scope="col">Event Name</th>
             <th scope="col">Event Time</th>
-            <th scope="col">Vacant Seats</th>
-            <th scope="col">Booked Seats</th>
             <th scope="col"></th>
-
             <th scope="col"></th>
           </tr>
         </thead>
@@ -65,8 +62,6 @@
               <%= events[i].event_name %>
             </th>
             <td><%= events[i].date_time %></td>
-            <td>15</td>
-            <td>45</td>
 
             <td>
               <a
@@ -75,8 +70,13 @@
                 >X</a
               >
             </td>
-
-            <td></td>
+            <td>
+              <a
+                href="/user/showhall/<%=events[i]._id%>"
+                class="btn btn-info btn-block"
+                >Hall</a
+              >
+            </td>
           </tr>
           <% }%>
         </tbody>

@@ -1,0 +1,44 @@
+
+    <link rel="stylesheet" href="/opera.css" />
+
+</div>
+<form action="/user/reserve/<%=eventName%>" method="POST">
+<div class="plane">
+  <div class="cockpit">
+    <h1><%=eventName%></h1>
+  </div>
+  <ol class="cabin fuselage">
+    <% let seat= "" %> 
+    <% let lol= "" %> 
+    
+    <% for(let i=0; i < hall.num_rows; i++){ %>
+    <li class=" row--2">
+      <ol class="seats" type="A">
+        <% for(let j=0; j < hall.num_seats_per_row; j++){ %> <%
+        seat=String.fromCharCode(i+65)+j%>
+          <% if( occupiedSeats.includes(seat)) {%>
+            <li class="seat">
+              <input type="checkbox" disabled id="<%=seat%>" name="<%=seat%>" />
+              <label  for="<%=seat%>" value=""><%=seat%> </label>
+            </li>    
+          
+          <%} else {%>
+        <li class="seat">
+          <input type="checkbox" id="<%=seat%>" name="<%=seat%>" />
+          <label  for="<%=seat%>" value=""><%=seat%> </label>
+        </li>
+        
+
+        <% } %>
+        <% } %>
+      </ol>
+    </li>
+    <%}%>
+  </ol>
+  <br/>
+  <hr class="my-4">
+    <button type="submit" class="btn btn-primary btn-block">
+      Reserve
+    </button>
+  </form>
+</div>
